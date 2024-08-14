@@ -2,6 +2,7 @@ package kafkademo.notificationservice;
 
 import kafkademo.notificationservice.util.TextConstant;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -29,14 +30,20 @@ public class TelegramBot extends TelegramLongPollingBot {
                 sendMessage(update, TextConstant.WELCOME_MESSAGE);
             }
             if (messageText.contains("/link")) {
-                if (!messageText.contains(" ")) {
-                    sendMessage(update, TextConstant.EMPTY_EMAIL_WARNING);
-                } else {
-                    String email = messageText.split(" ")[1];
+                String[] parts = messageText.split(" ", 2);
+                String email = parts.length > 1 ? parts[1] : null;
+                if (email != null && isValidEmail(email)) {
                     sendMessage(update, TextConstant.EMAIL_RESPONSE.formatted(email));
+                } else {
+                    sendMessage(update, TextConstant.INVALID_EMAIL_WARNING);
                 }
             }
         }
+    }
+
+    private boolean isValidEmail(String email) {
+        EmailValidator emailValidator = EmailValidator.getInstance();
+        return emailValidator.isValid(email);
     }
 
     private void sendMessage(Update update, String messageText) {

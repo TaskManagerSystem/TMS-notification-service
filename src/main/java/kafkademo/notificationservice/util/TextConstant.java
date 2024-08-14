@@ -6,7 +6,7 @@ public class TextConstant {
             Enter /link <your email> to associate your \
             email with your TaskManagerSystems account.
             """;
-    public static final String EMPTY_EMAIL_WARNING = """
+    public static final String INVALID_EMAIL_WARNING = """
              Please, enter /link <your email> to associate your \
             email with your TaskManagerSystems account.
             """;
