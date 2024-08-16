@@ -57,7 +57,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             Long chatId = update.getMessage().getChatId();
             String token = new TokenGenerator().generateVerificationToken();
             String link = TextConstant.VERIFICATION_LINK.formatted(baseUrl, token);
-            kafkaProducer.sendEmailToValidate(email,chatId, token);
+            kafkaProducer.sendEmailToValidate(email, chatId, token);
             sendMessage(update, TextConstant.VERIFICATION_LINK_SENT);
             emailService.sendVerificationCode(email, link);
         } else {
