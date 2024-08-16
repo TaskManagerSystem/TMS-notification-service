@@ -9,9 +9,12 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Properties;
+import kafkademo.notificationservice.util.TextConstant;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class EmailService {
     @Value("${service.email}")
@@ -19,7 +22,7 @@ public class EmailService {
     @Value("${service.password}")
     private String password;
 
-    public void sendVerificationCode(String recipientEmail, String code) {
+    public void sendVerificationCode(String recipientEmail, String token) {
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
         prop.put("mail.smtp.port", "587");
@@ -36,11 +39,13 @@ public class EmailService {
             message.setFrom(new InternetAddress(username));
             message.setRecipients(
                     Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-            message.setSubject("Your Verification Link");
-            message.setText("Your verification link is: " + code);
+            message.setSubject("Link Telegram to your TaskManagerSystems account");
+            String htmlMessage = TextConstant.EMAIL_TEXT.formatted(token);
+            message.setContent(htmlMessage, "text/html; charset=utf-8");
             Transport.send(message);
+            log.info("Sent message to the email: {} successfully", recipientEmail);
         } catch (MessagingException e) {
-            throw new RuntimeException(e);
+            log.error("Can't send message to the email: {}", recipientEmail);
         }
     }
 }
