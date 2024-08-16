@@ -14,4 +14,10 @@ public class TextConstant {
             "Verification link has been sent to your email.";
     public static final String VERIFICATION_LINK =
             "%s/api/auth/confirm?token=%s";
+    public static final String EMAIL_TEXT = """
+            <h3>Hello! Click on this button, if you want link your Telegram with TMS account:</h3> \
+            <a href="%s" style="display: inline-block; padding: 10px 20px;
+            font-size: 16px; color: white; background-color: #4CAF50;
+            text-align:center; text-decoration: none; border-radius: 5px;"
+            >Link Telegram to account</a>""";
 }

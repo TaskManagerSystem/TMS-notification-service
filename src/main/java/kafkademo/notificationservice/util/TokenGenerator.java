@@ -4,7 +4,7 @@ import java.util.UUID;
 
 public class TokenGenerator {
 
-    public String generateVerificationToken(Long chatId, String email) {
+    public String generateVerificationToken() {
         return UUID.randomUUID().toString();
     }
 }

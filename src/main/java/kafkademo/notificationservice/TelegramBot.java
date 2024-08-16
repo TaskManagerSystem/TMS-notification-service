@@ -42,6 +42,8 @@ public class TelegramBot extends TelegramLongPollingBot {
             String[] parts = messageText.split(" ", 2);
             String command = parts[0];
             String email = parts.length > 1 ? parts[1] : null;
+            log.info("Command: {} received from chatId: {}",
+                    command, update.getMessage().getChatId());
             switch (command) {
                 case "/start" -> sendMessage(update, TextConstant.WELCOME_MESSAGE);
                 case "/link" -> handleLinkCommand(update, email);
@@ -53,12 +55,13 @@ public class TelegramBot extends TelegramLongPollingBot {
     private void handleLinkCommand(Update update, String email) {
         if (email != null && EmailValidator.getInstance().isValid(email)) {
             Long chatId = update.getMessage().getChatId();
-            String token = new TokenGenerator().generateVerificationToken(chatId, email);
+            String token = new TokenGenerator().generateVerificationToken();
             String link = TextConstant.VERIFICATION_LINK.formatted(baseUrl, token);
             kafkaProducer.sendEmailToValidate(email, chatId, token);
             sendMessage(update, TextConstant.VERIFICATION_LINK_SENT);
             emailService.sendVerificationCode(email, link);
         } else {
+            log.error("Invalid input: {}", update.getMessage().getText());
             sendMessage(update, TextConstant.INVALID_INPUT_WARNING);
         }
     }
@@ -69,9 +72,9 @@ public class TelegramBot extends TelegramLongPollingBot {
         message.setText(messageText);
         try {
             execute(message);
+            log.info("Message successfully sent: {}", message.getText());
         } catch (TelegramApiException e) {
             log.error("Can't send message: {}", message.getText(), e);
         }
     }
-
 }
