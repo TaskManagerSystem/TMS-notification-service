@@ -35,25 +35,31 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
+        if (update.hasMessage()
+                && update.getMessage().hasText()
+                && update.getMessage().getText().contains("/")) {
             String messageText = update.getMessage().getText();
-            if (messageText.equals("/start")) {
-                sendMessage(update, TextConstant.WELCOME_MESSAGE);
+            String[] parts = messageText.split(" ", 2);
+            String command = parts[0];
+            String email = parts.length > 1 ? parts[1] : null;
+            switch (command) {
+                case "/start" -> sendMessage(update, TextConstant.WELCOME_MESSAGE);
+                case "/link" -> handleLinkCommand(update, email);
+                default -> sendMessage(update, TextConstant.INVALID_INPUT_WARNING);
             }
-            if (messageText.contains("/link")) {
-                String[] parts = messageText.split(" ", 2);
-                String email = parts.length > 1 ? parts[1] : null;
-                if (email != null && EmailValidator.getInstance().isValid(email)) {
-                    Long chatId = update.getMessage().getChatId();
-                    String token = new TokenGenerator().generateVerificationToken(chatId, email);
-                    String link = TextConstant.VERIFICATION_LINK.formatted(baseUrl, token);
-                    kafkaProducer.sendEmailToValidate(email, chatId, token);
-                    sendMessage(update, TextConstant.VERIFICATION_LINK_SENT);
-                    emailService.sendVerificationCode(email, link);
-                } else {
-                    sendMessage(update, TextConstant.INVALID_EMAIL_WARNING);
-                }
-            }
+        }
+    }
+
+    private void handleLinkCommand(Update update, String email) {
+        if (email != null && EmailValidator.getInstance().isValid(email)) {
+            Long chatId = update.getMessage().getChatId();
+            String token = new TokenGenerator().generateVerificationToken(chatId, email);
+            String link = TextConstant.VERIFICATION_LINK.formatted(baseUrl, token);
+            kafkaProducer.sendEmailToValidate(email, chatId, token);
+            sendMessage(update, TextConstant.VERIFICATION_LINK_SENT);
+            emailService.sendVerificationCode(email, link);
+        } else {
+            sendMessage(update, TextConstant.INVALID_INPUT_WARNING);
         }
     }
 
