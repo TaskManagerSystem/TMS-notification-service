@@ -14,9 +14,10 @@ public class KafkaProducer {
 
     public void sendEmailToValidate(String email, Long chatId, String token) {
         String message = token + ":" + email + ":" + chatId;
+        String topic = "email-validation-topic";
         ProducerRecord<String, String> record =
-                new ProducerRecord<>("email-validation-topic",message);
+                new ProducerRecord<>(topic,message);
         kafkaTemplate.send(record);
-        log.info("Sent record");
+        log.info("Sent record: {} to the topic {}", record, topic);
     }
 }

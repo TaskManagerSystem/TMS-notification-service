@@ -61,6 +61,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             sendMessage(update, TextConstant.VERIFICATION_LINK_SENT);
             emailService.sendVerificationCode(email, link);
         } else {
+            log.error("Invalid input: {}", update.getMessage().getText());
             sendMessage(update, TextConstant.INVALID_INPUT_WARNING);
         }
     }
@@ -71,9 +72,9 @@ public class TelegramBot extends TelegramLongPollingBot {
         message.setText(messageText);
         try {
             execute(message);
+            log.info("Message successfully sent: {}", message.getText());
         } catch (TelegramApiException e) {
             log.error("Can't send message: {}", message.getText(), e);
         }
     }
-
 }
