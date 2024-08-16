@@ -2,12 +2,12 @@ package kafkademo.notificationservice;
 
 import kafkademo.notificationservice.kafka.KafkaProducer;
 import kafkademo.notificationservice.service.EmailService;
-import kafkademo.notificationservice.util.CodeGenerator;
 import kafkademo.notificationservice.util.TextConstant;
-import lombok.Setter;
+import kafkademo.notificationservice.util.TokenGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -16,10 +16,10 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Slf4j
 public class TelegramBot extends TelegramLongPollingBot {
     private final String botName;
-    @Setter
+    @Value("${base.url}")
+    private String baseUrl;
     @Autowired
     private KafkaProducer kafkaProducer;
-    @Setter
     @Autowired
     private EmailService emailService;
 
@@ -44,9 +44,12 @@ public class TelegramBot extends TelegramLongPollingBot {
                 String[] parts = messageText.split(" ", 2);
                 String email = parts.length > 1 ? parts[1] : null;
                 if (email != null && EmailValidator.getInstance().isValid(email)) {
-                    String verificationCode = CodeGenerator.generateVerificationCode();
-                    emailService.sendVerificationCode(email, verificationCode);
-                    sendMessage(update, "Verification code has been sent to your email.");
+                    Long chatId = update.getMessage().getChatId();
+                    String token = new TokenGenerator().generateVerificationToken(chatId, email);
+                    String link = TextConstant.VERIFICATION_LINK.formatted(token);
+                    kafkaProducer.sendEmailToValidate(email, chatId, token);
+                    sendMessage(update, TextConstant.VERIFICATION_LINK_SENT);
+                    emailService.sendVerificationCode(email, link);
                 } else {
                     sendMessage(update, TextConstant.INVALID_EMAIL_WARNING);
                 }
@@ -64,4 +67,5 @@ public class TelegramBot extends TelegramLongPollingBot {
             log.error("Can't send message: {}", message.getText(), e);
         }
     }
+
 }

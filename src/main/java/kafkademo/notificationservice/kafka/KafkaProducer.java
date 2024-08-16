@@ -10,9 +10,10 @@ import org.springframework.stereotype.Component;
 public class KafkaProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public void sendEmailToValidate(String email, String chatId) {
+    public void sendEmailToValidate(String email, Long chatId, String token) {
+        String message = token + ":" + email + ":" + chatId;
         ProducerRecord<String, String> record =
-                new ProducerRecord<>("email-validation-topic", chatId, email);
+                new ProducerRecord<>("email-validation-topic",message);
         kafkaTemplate.send(record);
     }
 }

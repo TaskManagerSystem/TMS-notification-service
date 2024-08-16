@@ -10,5 +10,8 @@ public class TextConstant {
              Please, enter /link <your email> to associate your \
             email with your TaskManagerSystems account.
             """;
-    public static final String EMAIL_RESPONSE = "Your email: %s";
+    public static final String VERIFICATION_LINK_SENT =
+            "Verification link has been sent to your email.";
+    public static final String VERIFICATION_LINK =
+            "%s/api/auth/confirm?token=%s";
 }
