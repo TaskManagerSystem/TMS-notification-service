@@ -20,4 +20,12 @@ public class TextConstant {
             font-size: 16px; color: white; background-color: #4CAF50;
             text-align:center; text-decoration: none; border-radius: 5px;"
             >Link Telegram to account</a>""";
+    public static final String USER_IS_PRESENT = """
+            A link to associate your TMS account with Telegram has been sent to your email. 
+            The link is valid for 1 hour.
+            """;
+    public static final String USER_NOT_PRESENT = """
+            No account with email \
+            %s was found. Create an account in TMS first.
+            """;
 }

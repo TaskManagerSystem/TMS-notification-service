@@ -22,7 +22,7 @@ public class EmailService {
     @Value("${service.password}")
     private String password;
 
-    public void sendVerificationCode(String recipientEmail, String token) {
+    public void sendVerificationCode(String recipientEmail, String link) {
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
         prop.put("mail.smtp.port", "587");
@@ -40,7 +40,7 @@ public class EmailService {
             message.setRecipients(
                     Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
             message.setSubject("Link Telegram to your TaskManagerSystems account");
-            String htmlMessage = TextConstant.EMAIL_TEXT.formatted(token);
+            String htmlMessage = TextConstant.EMAIL_TEXT.formatted(link);
             message.setContent(htmlMessage, "text/html; charset=utf-8");
             Transport.send(message);
             log.info("Sent message to the email: {} successfully", recipientEmail);
