@@ -29,15 +29,15 @@ public class EmailService implements NotificationService, VerificationService {
     @Override
     public void sendNotification(UserData userData, MessageData messageData) {
         Session session = getSession();
+        String subject = messageData.getSubject();
+        String htmlMessage = formTextForEmail(messageData.getText());
         try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
-            message.setRecipients(
-                    Message.RecipientType.TO, InternetAddress.parse(userData.getEmail()));
-            message.setSubject(messageData.getSubject());
-            String htmlMessage = formMessageForEmail(messageData.getText());
-            message.setContent(htmlMessage, "text/html; charset=utf-8");
-            Transport.send(message);
+            Transport.send(formEmailMessage(
+                    session,
+                    userData.getEmail(),
+                    subject,
+                    htmlMessage
+            ));
             log.info("Sent notification message to the email: {} successfully",
                     userData.getEmail());
         } catch (MessagingException e) {
@@ -49,15 +49,15 @@ public class EmailService implements NotificationService, VerificationService {
     @Override
     public void sendVerification(String recipientEmail, String link) {
         Session session = getSession();
+        String subject = "Link Telegram to your TaskManagerSystems account";
+        String htmlMessage = TextConstant.EMAIL_TEXT.formatted(link);
         try {
-            Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
-            message.setRecipients(
-                    Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
-            message.setSubject("Link Telegram to your TaskManagerSystems account");
-            String htmlMessage = TextConstant.EMAIL_TEXT.formatted(link);
-            message.setContent(htmlMessage, "text/html; charset=utf-8");
-            Transport.send(message);
+            Transport.send(formEmailMessage(
+                    session,
+                    recipientEmail,
+                    subject,
+                    htmlMessage
+            ));
             log.info("Sent verification message to the email: {} successfully",
                     recipientEmail);
         } catch (MessagingException e) {
@@ -80,8 +80,21 @@ public class EmailService implements NotificationService, VerificationService {
         });
     }
 
-    private String formMessageForEmail(String message) {
+    private String formTextForEmail(String message) {
         //TODO: logic for html message forming
         return null;
+    }
+
+    private Message formEmailMessage(Session session,
+                                     String recipientEmail,
+                                     String subject,
+                                     String htmlMessage) throws MessagingException {
+        Message message = new MimeMessage(session);
+        message.setFrom(new InternetAddress(username));
+        message.setRecipients(
+                Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
+        message.setSubject(subject);
+        message.setContent(htmlMessage, "text/html; charset=utf-8");
+        return message;
     }
 }
