@@ -7,7 +7,6 @@ import kafkademo.notificationservice.util.TokenGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -16,8 +15,6 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @Slf4j
 public class TelegramBot extends TelegramLongPollingBot {
     private final String botName;
-    @Value("${base.url}")
-    private String baseUrl;
     @Autowired
     private KafkaProducer kafkaProducer;
     @Autowired
@@ -42,13 +39,26 @@ public class TelegramBot extends TelegramLongPollingBot {
             String[] parts = messageText.split(" ", 2);
             String command = parts[0];
             String email = parts.length > 1 ? parts[1] : null;
+            String chatId = update.getMessage().getChatId().toString();
             log.info("Command: {} received from chatId: {}",
                     command, update.getMessage().getChatId());
             switch (command) {
-                case "/start" -> sendMessage(update, TextConstant.WELCOME_MESSAGE);
+                case "/start" -> sendMessage(chatId, TextConstant.WELCOME_MESSAGE);
                 case "/link" -> handleLinkCommand(update, email);
-                default -> sendMessage(update, TextConstant.INVALID_INPUT_WARNING);
+                default -> sendMessage(chatId, TextConstant.INVALID_INPUT_WARNING);
             }
+        }
+    }
+
+    public void sendMessage(String chatId, String messageText) {
+        SendMessage message = new SendMessage();
+        message.setChatId(chatId);
+        message.setText(messageText);
+        try {
+            execute(message);
+            log.info("Message successfully sent: {}", message.getText());
+        } catch (TelegramApiException e) {
+            log.error("Can't send message: {}", message.getText(), e);
         }
     }
 
@@ -56,25 +66,11 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (email != null && EmailValidator.getInstance().isValid(email)) {
             Long chatId = update.getMessage().getChatId();
             String token = new TokenGenerator().generateVerificationToken();
-            String link = TextConstant.VERIFICATION_LINK.formatted(baseUrl, token);
             kafkaProducer.sendEmailToValidate(email, chatId, token);
-            sendMessage(update, TextConstant.VERIFICATION_LINK_SENT);
-            emailService.sendVerificationCode(email, link);
         } else {
             log.error("Invalid input: {}", update.getMessage().getText());
-            sendMessage(update, TextConstant.INVALID_INPUT_WARNING);
-        }
-    }
-
-    private void sendMessage(Update update, String messageText) {
-        SendMessage message = new SendMessage();
-        message.setChatId(update.getMessage().getChatId().toString());
-        message.setText(messageText);
-        try {
-            execute(message);
-            log.info("Message successfully sent: {}", message.getText());
-        } catch (TelegramApiException e) {
-            log.error("Can't send message: {}", message.getText(), e);
+            sendMessage(update.getMessage().getChatId().toString(),
+                    TextConstant.INVALID_INPUT_WARNING);
         }
     }
 }
