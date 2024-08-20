@@ -9,8 +9,7 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Properties;
-import kafkademo.notificationservice.model.MessageData;
-import kafkademo.notificationservice.model.UserData;
+import kafkademo.notificationservice.model.NotificationData;
 import kafkademo.notificationservice.service.NotificationService;
 import kafkademo.notificationservice.service.VerificationService;
 import kafkademo.notificationservice.util.TextConstant;
@@ -27,22 +26,22 @@ public class EmailService implements NotificationService, VerificationService {
     private String password;
 
     @Override
-    public void sendNotification(UserData userData, MessageData messageData) {
+    public void sendNotification(NotificationData notificationData) {
         Session session = getSession();
-        String subject = messageData.getSubject();
-        String htmlMessage = formTextForEmail(messageData.getText());
+        String subject = notificationData.getMessageSubject();
+        String htmlMessage = formTextForEmail(notificationData.getMessageText());
         try {
             Transport.send(formEmailMessage(
                     session,
-                    userData.getEmail(),
+                    notificationData.getEmail(),
                     subject,
                     htmlMessage
             ));
             log.info("Sent notification message to the email: {} successfully",
-                    userData.getEmail());
+                    notificationData.getEmail());
         } catch (MessagingException e) {
             log.error("Can't send notification message to the email: {}",
-                    userData.getEmail());
+                    notificationData.getEmail());
         }
     }
 

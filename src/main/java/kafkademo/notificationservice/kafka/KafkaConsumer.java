@@ -3,8 +3,7 @@ package kafkademo.notificationservice.kafka;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kafkademo.notificationservice.TelegramBot;
-import kafkademo.notificationservice.model.MessageData;
-import kafkademo.notificationservice.model.UserData;
+import kafkademo.notificationservice.model.NotificationData;
 import kafkademo.notificationservice.model.VerificationData;
 import kafkademo.notificationservice.service.NotificationService;
 import kafkademo.notificationservice.service.VerificationService;
@@ -47,12 +46,12 @@ public class KafkaConsumer {
     @KafkaListener(topics = "notification-topic", groupId = "task-manager-systems")
     public void sendNotification(ConsumerRecord<String, String> record)
             throws JsonProcessingException {
-        UserData userData = objectMapper.readValue(record.key(), UserData.class);
-        MessageData messageData = objectMapper.readValue(record.value(), MessageData.class);
-        String notificationType = userData.getChatId() == null ? "EMAIL" : "TELEGRAM";
+        NotificationData notificationData =
+                objectMapper.readValue(record.value(), NotificationData.class);
+        String notificationType = notificationData.getChatId() == null ? "EMAIL" : "TELEGRAM";
         NotificationService notificationService =
                 notificationHandlerFactory.getNotificationService(notificationType);
-        notificationService.sendNotification(userData, messageData);
+        notificationService.sendNotification(notificationData);
         //TODO: check logic
     }
 }
