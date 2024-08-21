@@ -24,6 +24,8 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install --settings .github/maven-settings.xml
+        env:
+          TOKEN: ${{ secrets.TOKEN }}
 
       - name: Run tests
         run: mvn test
