@@ -8,5 +8,4 @@ public class NotificationData {
     private Long chatId;
     private String messageSubject;
     private String messageText;
-    //TODO: add all required fields
 }

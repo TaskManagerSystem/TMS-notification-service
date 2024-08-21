@@ -52,6 +52,5 @@ public class KafkaConsumer {
         NotificationService notificationService =
                 notificationHandlerFactory.getNotificationService(notificationType);
         notificationService.sendNotification(notificationData);
-        //TODO: check logic
     }
 }

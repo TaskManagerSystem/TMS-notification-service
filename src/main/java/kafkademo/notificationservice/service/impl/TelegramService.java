@@ -3,6 +3,7 @@ package kafkademo.notificationservice.service.impl;
 import kafkademo.notificationservice.TelegramBot;
 import kafkademo.notificationservice.model.NotificationData;
 import kafkademo.notificationservice.service.NotificationService;
+import kafkademo.notificationservice.util.TextConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,13 +14,13 @@ public class TelegramService implements NotificationService {
 
     @Override
     public void sendNotification(NotificationData notificationData) {
-        String telegramMessage = formMessageForTelegram(notificationData.getMessageText());
+        String telegramMessage = formMessageForTelegram(notificationData);
         telegramBot.sendMessage(notificationData.getChatId().toString(),telegramMessage);
-        //TODO: logic for forming and sending notification via telegram
     }
 
-    private String formMessageForTelegram(String message) {
-        //TODO: logic for telegram message forming
-        return null;
+    private String formMessageForTelegram(NotificationData notificationData) {
+        return TextConstant.TELEGRAM_NOTIFICATION.formatted(
+                notificationData.getMessageSubject(), notificationData.getMessageText()
+        );
     }
 }

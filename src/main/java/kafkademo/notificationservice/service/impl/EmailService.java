@@ -29,7 +29,7 @@ public class EmailService implements NotificationService, VerificationService {
     public void sendNotification(NotificationData notificationData) {
         Session session = getSession();
         String subject = notificationData.getMessageSubject();
-        String htmlMessage = formTextForEmail(notificationData.getMessageText());
+        String htmlMessage = formTextForEmail(notificationData);
         try {
             Transport.send(formEmailMessage(
                     session,
@@ -49,7 +49,7 @@ public class EmailService implements NotificationService, VerificationService {
     public void sendVerification(String recipientEmail, String link) {
         Session session = getSession();
         String subject = "Link Telegram to your TaskManagerSystems account";
-        String htmlMessage = TextConstant.EMAIL_TEXT.formatted(link);
+        String htmlMessage = TextConstant.EMAIL_VERIFICATION.formatted(link);
         try {
             Transport.send(formEmailMessage(
                     session,
@@ -79,9 +79,8 @@ public class EmailService implements NotificationService, VerificationService {
         });
     }
 
-    private String formTextForEmail(String message) {
-        //TODO: logic for html message forming
-        return null;
+    private String formTextForEmail(NotificationData notificationData) {
+        return TextConstant.EMAIL_NOTIFICATION.formatted(notificationData.getMessageText());
     }
 
     private Message formEmailMessage(Session session,
