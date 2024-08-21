@@ -26,6 +26,12 @@
 		<tag/>
 		<url/>
 	</scm>
+	<repositories>
+		<repository>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/TaskManagerSystem/common-dto</url>
+		</repository>
+	</repositories>
 	<properties>
 		<java.version>21</java.version>
 		<telegrambots.version>6.9.7.1</telegrambots.version>
@@ -81,6 +87,11 @@
 			<groupId>jakarta.activation</groupId>
 			<artifactId>jakarta.activation-api</artifactId>
 			<version>${jakartamail.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>common-dto</artifactId>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
 

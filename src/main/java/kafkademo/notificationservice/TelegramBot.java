@@ -1,7 +1,6 @@
 package kafkademo.notificationservice;
 
 import kafkademo.notificationservice.kafka.KafkaProducer;
-import kafkademo.notificationservice.service.EmailService;
 import kafkademo.notificationservice.util.TextConstant;
 import kafkademo.notificationservice.util.TokenGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +16,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final String botName;
     @Autowired
     private KafkaProducer kafkaProducer;
-    @Autowired
-    private EmailService emailService;
 
     public TelegramBot(String botName, String botToken) {
         super(botToken);
