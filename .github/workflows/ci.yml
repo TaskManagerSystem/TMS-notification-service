@@ -23,7 +23,7 @@ jobs:
             ${{ runner.os }}-m2-cache-
 
       - name: Build with Maven
-        run: mvn clean install
+        run: mvn clean install --settings .github/maven-settings.xml
 
       - name: Run tests
         run: mvn test
