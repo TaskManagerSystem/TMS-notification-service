@@ -29,7 +29,7 @@
         <server>
             <id>github</id>
             <username>ReamFOX</username>
-            <password>${{ secrets.TOKEN }}</password>
+            <password>${TOKEN}</password>
         </server>
     </servers>
 </settings>
