@@ -1,5 +1,6 @@
 package kafkademo.notificationservice.service.impl;
 
+import com.example.dto.NotificationData;
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -9,7 +10,6 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.util.Properties;
-import kafkademo.notificationservice.model.NotificationData;
 import kafkademo.notificationservice.service.NotificationService;
 import kafkademo.notificationservice.service.VerificationService;
 import kafkademo.notificationservice.util.TextConstant;

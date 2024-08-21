@@ -1,7 +1,7 @@
 package kafkademo.notificationservice.service.impl;
 
+import com.example.dto.NotificationData;
 import kafkademo.notificationservice.TelegramBot;
-import kafkademo.notificationservice.model.NotificationData;
 import kafkademo.notificationservice.service.NotificationService;
 import kafkademo.notificationservice.util.TextConstant;
 import lombok.RequiredArgsConstructor;

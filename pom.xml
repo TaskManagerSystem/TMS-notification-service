@@ -82,6 +82,11 @@
 			<artifactId>jakarta.activation-api</artifactId>
 			<version>${jakartamail.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>common-dto</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<build>
