@@ -19,4 +19,4 @@ jobs:
       - name: Publish package
         run: mvn deploy --settings .github/maven-settings.xml
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          TOKEN: ${{ secrets.TOKEN }}

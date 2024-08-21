@@ -1,0 +1,9 @@
+<settings>
+    <servers>
+        <server>
+            <id>github</id>
+            <username>ReamFOX</username>
+            <password>${{ secrets.TOKEN }}</password>
+        </server>
+    </servers>
+</settings>
