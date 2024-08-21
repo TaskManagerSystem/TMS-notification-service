@@ -15,7 +15,7 @@ public class TelegramService implements NotificationService {
     @Override
     public void sendNotification(NotificationData notificationData) {
         String telegramMessage = formMessageForTelegram(notificationData);
-        telegramBot.sendMessage(notificationData.getChatId().toString(),telegramMessage);
+        telegramBot.sendMessage(notificationData.getChatId().toString(), telegramMessage);
     }
 
     private String formMessageForTelegram(NotificationData notificationData) {

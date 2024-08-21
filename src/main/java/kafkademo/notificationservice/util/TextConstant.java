@@ -32,6 +32,9 @@ public class TextConstant {
                 <p><strong>%s</strong></p>
                 <p>Please take the necessary action.</p>
             """;
-    public static final String TELEGRAM_NOTIFICATION =
-            "\uD83D\uDD14 *Notification* \uD83D\uDD14\n\n%s\n%s\n";
+    public static final String TELEGRAM_NOTIFICATION = """
+            🔔 *Notification* 🔔 \\
+            %s \
+            %s \
+            """;
 }
