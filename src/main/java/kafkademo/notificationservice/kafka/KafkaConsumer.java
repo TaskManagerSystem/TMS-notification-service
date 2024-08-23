@@ -39,7 +39,8 @@ public class KafkaConsumer {
     }
 
     @KafkaListener(topics = "notification-topic", groupId = "task-manager-systems")
-    public void sendNotification(NotificationData notificationData) {
+    public void sendNotification(ConsumerRecord<String, NotificationData> record) {
+        NotificationData notificationData = record.value();
         String notificationType = notificationData.getChatId() == null ? "EMAIL" : "TELEGRAM";
         NotificationService notificationService =
                 notificationHandlerFactory.getNotificationService(notificationType);
