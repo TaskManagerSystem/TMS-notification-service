@@ -2,12 +2,12 @@ package kafkademo.notificationservice.util;
 
 public class TextConstant {
     public static final String WELCOME_MESSAGE = """
-             Welcome! I'm a notification bot from TaskManagerSystems. \
-            Enter /link <your email> to associate your \
+             Welcome! I'm a notification bot from TaskManagerSystems. \n
+            Enter /link <your email> to associate your \n
             email with your TaskManagerSystems account.
             """;
     public static final String INVALID_INPUT_WARNING = """
-             Please, enter /link <your email> to associate your \
+             Please, enter /link <your email> to associate your \n
             telegram with your TaskManagerSystems account.
             """;
     public static final String VERIFICATION_LINK =
@@ -23,18 +23,16 @@ public class TextConstant {
             The link is valid for 1 hour.
             """;
     public static final String USER_NOT_PRESENT = """
-            No account with email \
+            No account with email \n
             %s was found. Create an account in TMS first.
             """;
     public static final String EMAIL_NOTIFICATION = """
-                <h3>Notification Alert:</h3>
-                <p>You have a new update:</p>
-                <p><strong>%s</strong></p>
-                <p>Please take the necessary action.</p>
+                <h3>Notification Alert</h3>
+                <pre>%s</pre>
             """;
     public static final String TELEGRAM_NOTIFICATION = """
-            🔔 *Notification* 🔔 \\
-            %s \
-            %s \
+            🔔Notification🔔 \n
+            %s \n
+            %s \n
             """;
 }
