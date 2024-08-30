@@ -6,7 +6,15 @@ project deadlines. It sends messages to Telegram, and if the user
 is not connected to Telegram, the notification is sent to their email.
 
 ***
+## Project Repositories
+The project consists of several separate repositories:
 
+1. **[TMS Main Service](https://github.com/TaskManagerSystem/TMS-main-service)**: The main service for task and project management.
+2. **[TMS Attachment Service](https://github.com/TaskManagerSystem/TMS-attachment-service)**: The service for managing attachments and integration with Dropbox.
+3. **[TMS Notification Service](https://github.com/TaskManagerSystem/TMS-notification-service)**: The service for sending notifications via email and Telegram.
+4. **[TMS Common DTO](https://github.com/TaskManagerSystem/TMS-common-dto)**: A shared DTO library used across all microservices.
+
+***
 ## Key features:
 1. **Integration with Task Management Service**:
 The service integrates with tasks management service to 
